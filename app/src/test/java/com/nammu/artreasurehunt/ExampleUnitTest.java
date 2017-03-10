@@ -1,4 +1,4 @@
-package com.nammu.myapplication;
+package com.nammu.artreasurehunt;
 
 import org.junit.Test;
 
