@@ -1,3 +1,82 @@
 <resources>
     <string name="app_name">ARTreasuerHunt</string>
+
+
+    <string name="UPDATE_ERROR_AUTHORIZATION_FAILED_TITLE">Authorization Error</string>
+    <string name="UPDATE_ERROR_PROJECT_SUSPENDED_TITLE">Authorization Error</string>
+    <string name="UPDATE_ERROR_NO_NETWORK_CONNECTION_TITLE">Network Unavailable</string>
+    <string name="UPDATE_ERROR_SERVICE_NOT_AVAILABLE_TITLE">Service Unavailable</string>
+    <string name="UPDATE_ERROR_UPDATE_SDK_TITLE">Unsupported Version</string>
+    <string name="UPDATE_ERROR_TIMESTAMP_OUT_OF_RANGE_TITLE">Clock Sync Error</string>
+    <string name="UPDATE_ERROR_REQUEST_TIMEOUT_TITLE">Request Timeout</string>
+    <string name="UPDATE_ERROR_BAD_FRAME_QUALITY_TITLE">Poor Camera Image</string>
+    <string name="UPDATE_ERROR_UNKNOWN_TITLE">Service Unavailable</string>
+    <string name="UPDATE_ERROR_AUTHORIZATION_FAILED_DESC">The cloud recognition service access keys are incorrect or have expired.</string>
+    <string name="UPDATE_ERROR_PROJECT_SUSPENDED_DESC">The cloud recognition service has been suspended.</string>
+    <string name="UPDATE_ERROR_NO_NETWORK_CONNECTION_DESC">Please check your internet connection and try again.</string>
+    <string name="UPDATE_ERROR_SERVICE_NOT_AVAILABLE_DESC">The service is unavailable, please try again later.</string>
+    <string name="UPDATE_ERROR_UPDATE_SDK_DESC">The application is using an unsupported version of Vuforia.</string>
+    <string name="UPDATE_ERROR_TIMESTAMP_OUT_OF_RANGE_DESC">Please update the date and time and try again.</string>
+    <string name="UPDATE_ERROR_REQUEST_TIMEOUT_DESC">The network request has timed out, please check your internet connection and try again.</string>
+    <string name="UPDATE_ERROR_BAD_FRAME_QUALITY_DESC">The camera does not have enough detail, please try again later.</string>
+    <string name="UPDATE_ERROR_UNKNOWN_DESC">The service is unavaiable, please try again later.</string>
+
+    <string name="INIT_ERROR">Error</string>
+    <string name="INIT_ERROR_DEVICE_NOT_SUPPORTED">Failed to initialize Vuforia. This device is not supported.</string>
+    <string name="INIT_ERROR_NO_CAMERA_ACCESS">Failed to initialize Vuforia. Camera not accessible</string>
+    <string name="INIT_LICENSE_ERROR_MISMATCH_KEY">Vuforia App key is not valid for this product. Please get a valid key, by logging into your account at developer.vuforia.com and choosing the right product type during project creation.</string>
+    <string name="INIT_LICENSE_ERROR_MISSING_KEY">Vuforia App key is missing. Please get a valid key, by logging into your account at developer.vuforia.com and creating a new project.</string>
+    <string name="INIT_LICENSE_ERROR_INVALID_KEY">Invalid Key used. Please make sure you are using a valid Vuforia App Key.</string>
+    <string name="INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT">Unable to contact server. Please try again later.</string>
+    <string name="INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT">No network available. Please make sure you are connected to the Internet.</string>
+    <string name="INIT_LICENSE_ERROR_CANCELED_KEY">This app license key has been canceled and may no longer be used. Please get a new license key.</string>
+    <string name="INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH">Vuforia App key is not valid for this product. Please get a valid key, by logging into your account at developer.vuforia.com and choosing the right product type during project creation.</string>
+    <string name="INIT_LICENSE_ERROR_UNKNOWN_ERROR">Failed to initialize Vuforia.</string>
+    <string name="INIT_OBJECT_DATASET_NOT_FOUND_TITLE">Database not found</string>
+    <string name="INIT_OBJECT_DATASET_NOT_FOUND">Please scan an object and load a database</string>
+
+
+    <string name="font">font_third.jpg</string>
+
+    <string name="tour_api_key">JNbqf4NQaSTqFcIueZ7tna%2B1OvOKTiRGmCMpdoL%2FxlE4YUkZPfVhxk9rwarKYNACs1UfYGj49jO%2BKFYKSqsFhQ%3D%3D</string>
+    <string name="tour_id_search_first">http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon?ServiceKey=</string>
+    <string name="tour_id_search_second">&amp;contentTypeId=&amp;contentId=</string>
+    <string name="tour_id_search_third">&amp;MobileOS=AND&amp;MobileApp=TourAPI3.0_Guide&amp;defaultYN=Y&amp;firstImageYN=Y&amp;areacodeYN=Y&amp;catcodeYN=Y&amp;addrinfoYN=Y&amp;mapinfoYN=Y&amp;overviewYN=Y&amp;transGuideYN=Y</string>
+
+    <string name="tour_location_search_first">http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey=</string>
+    <string name="tour_location_search_second">&amp;contentTypeId=&amp;mapX=</string>
+    <string name="tour_location_search_third">&amp;mapY=</string>
+    <string name="tour_location_search_fourth">&amp;radius=</string>
+    <string name="tour_location_search_fifth">&amp;listYN=Y&amp;MobileOS=AND&amp;MobileApp=TourAPI3.0_Guide&amp;arrange=E&amp;numOfRows=999&amp;pageNo=1</string>
+
+    <string name="tour_keyword_search_first">http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchKeyword?ServiceKey=</string>
+    <string name="tour_keyword_search_second">&amp;keyword=</string>
+    <string name="tour_keyword_search_third">&amp;areaCode=&amp;sigunguCode=&amp;cat1=&amp;cat2=&amp;cat3=&amp;listYN=Y&amp;MobileOS=AND&amp;MobileApp=TourAPI3.0_Guide&amp;arrange=B&amp;numOfRows=999&amp;pageNo=1</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="str_done">완료</string>
+    <string name="newbie">뉴비는 늅늅하고 웁니다</string>
+
+    <string name="default_image">https://ilyricsbuzz.com/wp-content/uploads/2017/02/TWICEcoaster-LANE-2.jpg</string>
+    <string name="default_description">지금 당장 모험을 떠나세요</string>
+
+    <string name="intro_default">소갯말을 작성해 주세요</string>
+
+    <string name="loading">로그인 중입니다</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_flag">Map</string>
+
+    <string name="app_description">ACVENTOUR</string>
+
+    <string name="button_start">Start</string>
+    <string name="activities_list_title_string">Vuforia Samples</string>
+    <string name="activities_list_empty">No activities</string>
+
+    <string name="button_OK">OK</string>
+
+    <string name="content_desc_camera_button">Camera Button</string>
+    <string name="overlay_build_target_help">Hold the device parallel to the target</string>
+    <string name="target_quality_error_title">Low Quality Image</string>
+    <string name="target_quality_error_desc">The image has very little detail, please try another.</string>
+
 </resources>

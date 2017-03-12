@@ -26,14 +26,11 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback {
 
     public Preview(Context context, SurfaceView sv) {
         super(context);
-
         mSurfaceView = sv;
-//        addView(mSurfaceView);
 
         mHolder = mSurfaceView.getHolder();
         mHolder.addCallback(this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
     }
 
     public void setCamera(Camera camera) {
@@ -45,7 +42,6 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback {
             // applications. Applications should release the camera immediately
             // during onPause() and re-open() it during onResume()).
             mCamera.release();
-
             mCamera = null;
         }
 
