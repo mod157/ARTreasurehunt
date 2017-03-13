@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startTreasuerHuntPage(){
         Toast.makeText(this,"입장 합니다.",Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, UserDefinedTargets.class);
+        Intent intent = new Intent(this, TreasuerMapActivity.class);
         startActivity(intent);
     }
 }

@@ -73,17 +73,12 @@ import java.util.Vector;
 
 // The main activity for the UserDefinedTargets sample.
 public class UserDefinedTargets extends FragmentActivity implements
-        SampleApplicationControl, OnMapReadyCallback, android.location.LocationListener {
+        SampleApplicationControl {
 
     private static final String LOGTAG = "UserDefinedTargets";
-    private static final int GET_STICKER_DISTANCE = 50;
-    private double questLng = 127.0078303;
-    private double questLat = 37.267509;
+
     private String questAsset = "markimg.png";
     private int questResId = 1;
-    // private int questResId;
-    private GoogleMap arMap;
-    private SupportMapFragment mapFragment;
 
 
     private SampleApplicationSession vuforiaAppSession;
@@ -100,7 +95,6 @@ public class UserDefinedTargets extends FragmentActivity implements
     // View overlays to be displayed in the Augmented View
     private RelativeLayout mUILayout;
     private View mBottomBar;
-    private View mCameraButton;
     private TextView questDistanceTextView;
 
     // Alert dialog for displaying SDK errors
@@ -134,11 +128,8 @@ public class UserDefinedTargets extends FragmentActivity implements
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-       /* questLng = intent.getExtras().getDouble("questlng");
-        questLat = intent.getExtras().getDouble("questlat");
-        questAsset = intent.getExtras().getString("questasset");
-        questResId = intent.getExtras().getInt("questresid");
-*/
+        questResId = intent.getExtras().getInt("TreasuerNumber");
+
         vuforiaAppSession = new SampleApplicationSession(this);
 
         vuforiaAppSession
@@ -152,107 +143,23 @@ public class UserDefinedTargets extends FragmentActivity implements
 
         mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith(
                 "droid");
+        trackBuilder();
 
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        arMap = googleMap;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        //locationService();
-        GpsInfo gps = new GpsInfo(this);
-        arMap.setMyLocationEnabled(true);
-        arMap.getUiSettings().setMyLocationButtonEnabled(false);
+    private void trackBuilder(){
+        if (isUserDefinedTargetsRunning()) {
+            // Shows the loading dialog
+            loadingDialogHandler
+                    .sendEmptyMessage(LoadingDialogHandler.SHOW_LOADING_DIALOG);
 
-        //Todo map에 여러 개 뿌리기
-        LatLng latLng = new LatLng(questLat, questLng);
-        Marker marker = arMap.addMarker(new MarkerOptions()
-                .title("보물")
-                .position(latLng));
-        arMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
-    }
-
-    private LocationManager locationManager;
-    private String provider;
-
-    private void locationService() {
-        int googlePlayServiceResult = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (googlePlayServiceResult != ConnectionResult.SUCCESS) { //구글 플레이 서비스를 활용하지 못할경우 <계정이 연결이 안되어 있는 경우
-            //실패
-            GooglePlayServicesUtil.getErrorDialog(googlePlayServiceResult, this, 0, new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    finish();
-                }
-            }).show();
-        } else { //구글 플레이가 활성화 된 경우
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            Criteria criteria = new Criteria();
-            provider = locationManager.getBestProvider(criteria, true);
-
-            if (provider == null) {  //위치정보 설정이 안되어 있으면 설정하는 엑티비티로 이동합니다
-                new AlertDialog.Builder(this)
-                        .setTitle("위치서비스 동의")
-                        .setNeutralButton("이동", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
-                            }
-                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        finish();
-                    }
-                })
-                        .show();
-            } else {   //위치 정보 설정이 되어 있으면 현재위치를 받아옵니다
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                locationManager.requestLocationUpdates(provider, 1, 1, this); //기본 위치 값 설정
-            }
-
-            //setMyLocation(); //내위치 정하는 함수
+            // Builds the new target
+             startBuild();
+            questDistanceTextView.setText("마크를 끌어당겨 획득하세요");
+        }else{
+            finish();
         }
     }
-    boolean locationTag=true;
-
-    @Override
-    public void onLocationChanged(Location location) {
-        if(locationTag){//한번만 위치를 가져오기 위해서 tag를 주었습니다
-
-            questLat = location.getLatitude();
-            questLng = location.getLongitude();
-            SLog.d("lat : lng = " + questLat + " : " + questLng);
-            locationTag=false; }
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-    private void setMyLocation(){ arMap.setOnMyLocationChangeListener(myLocationChangeListener); }
-    Marker mMarker; private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-        @Override public void onMyLocationChange(Location location) {
-            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-            mMarker = arMap.addMarker(new MarkerOptions().position(loc));
-            if(arMap != null){
-                arMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
-            }
-        }
-    };
 
 
 
@@ -452,10 +359,9 @@ public class UserDefinedTargets extends FragmentActivity implements
         refFreeFrame.init();
         
         // Create OpenGL ES view:
-        int depthSize = 16;
+        int depthSize = 13;
         int stencilSize = 0;
         boolean translucent = Vuforia.requiresAlpha();
-        
         mGlView = new SampleApplicationGLView(this);
         mGlView.init(translucent, depthSize, stencilSize);
         
@@ -463,8 +369,6 @@ public class UserDefinedTargets extends FragmentActivity implements
         mRenderer.setTextures(mTextures);
         mGlView.setRenderer(mRenderer);
         addOverlayView(true);
-
-        
     }
     
     
@@ -478,24 +382,20 @@ public class UserDefinedTargets extends FragmentActivity implements
         
         mUILayout.setVisibility(View.VISIBLE);
 
-
-        // If this is the first time that the application runs then the
-        // uiLayout background is set to BLACK color, will be set to
-        // transparent once the SDK is initialized and camera ready to draw
         if (initLayout)
         {
             mUILayout.setBackgroundColor(Color.BLACK);
         }
-        
+
         // Adds the inflated layout to the view
         addContentView(mUILayout, new LayoutParams(LayoutParams.MATCH_PARENT,
             LayoutParams.MATCH_PARENT));
         
         // Gets a reference to the bottom navigation bar
-        mBottomBar = mUILayout.findViewById(R.id.bottom_bar);
-        
+        /*mBottomBar = mUILayout.findViewById(R.id.bottom_bar);
+
         // Gets a reference to the Camera button
-        mCameraButton = mUILayout.findViewById(R.id.camera_button);
+        mCameraButton = mUILayout.findViewById(R.id.camera_button);*/
         questDistanceTextView = (TextView)mUILayout.findViewById(R.id.tv_quest_distance);
         // Gets a reference to the loading dialog container
         loadingDialogHandler.mLoadingDialogContainer = mUILayout
@@ -503,16 +403,14 @@ public class UserDefinedTargets extends FragmentActivity implements
         
         startUserDefinedTargets();
         initializeBuildTargetModeViews();
-        mapFragment = (SupportMapFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
 
         mUILayout.bringToFront();
 
     }
 
     // Button Camera clicked
-    public void onCameraClick(View v) {
+   /* public void onCameraClick(View v) {
 
         Location currentLocation = new Location(LocationManager.GPS_PROVIDER);
         currentLocation.setLongitude(MyApplication.getCurrentLng());
@@ -537,8 +435,7 @@ public class UserDefinedTargets extends FragmentActivity implements
         else {
             questDistanceTextView.setText(distance + "m");
         }
-
-    }
+    }*/
 
     // Creates a texture given the filename
     Texture createTexture(String nName)
@@ -567,7 +464,6 @@ public class UserDefinedTargets extends FragmentActivity implements
     {
         // Shows the bottom bar
         mBottomBar.setVisibility(View.VISIBLE);
-        mCameraButton.setVisibility(View.VISIBLE);
     }
     
     
@@ -974,11 +870,4 @@ public class UserDefinedTargets extends FragmentActivity implements
         return questResId;
     }
 
-    public double getQuestLat() {
-        return questLat;
-    }
-
-    public double getQuestLng() {
-        return questLng;
-    }
 }
