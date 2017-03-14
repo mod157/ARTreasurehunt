@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ARTreasuerHunt</string>
+    <string name="app_name">AR보물찾기</string>
 
 
     <string name="UPDATE_ERROR_AUTHORIZATION_FAILED_TITLE">Authorization Error</string>
@@ -55,12 +55,6 @@
 
     <string name="action_settings">Settings</string>
     <string name="str_done">완료</string>
-    <string name="newbie">뉴비는 늅늅하고 웁니다</string>
-
-    <string name="default_image">https://ilyricsbuzz.com/wp-content/uploads/2017/02/TWICEcoaster-LANE-2.jpg</string>
-    <string name="default_description">지금 당장 모험을 떠나세요</string>
-
-    <string name="intro_default">소갯말을 작성해 주세요</string>
 
     <string name="loading">로그인 중입니다</string>
     <string name="title_activity_maps">Map</string>

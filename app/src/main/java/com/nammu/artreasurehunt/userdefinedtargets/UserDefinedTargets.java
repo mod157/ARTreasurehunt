@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -73,12 +74,10 @@ import java.util.Vector;
 
 // The main activity for the UserDefinedTargets sample.
 public class UserDefinedTargets extends FragmentActivity implements
-        SampleApplicationControl {
-
-    private static final String LOGTAG = "UserDefinedTargets";
+        SampleApplicationControl, View.OnClickListener {
 
     private String questAsset = "markimg.png";
-    private int questResId = 1;
+    //private String questAsset = "tw1.jpg";
 
 
     private SampleApplicationSession vuforiaAppSession;
@@ -94,7 +93,6 @@ public class UserDefinedTargets extends FragmentActivity implements
 
     // View overlays to be displayed in the Augmented View
     private RelativeLayout mUILayout;
-    private View mBottomBar;
     private TextView questDistanceTextView;
 
     // Alert dialog for displaying SDK errors
@@ -124,12 +122,8 @@ public class UserDefinedTargets extends FragmentActivity implements
     // resuming the application or a configuration change.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(LOGTAG, "onCreate");
+        SLog.d( "onCreate");
         super.onCreate(savedInstanceState);
-
-        Intent intent = getIntent();
-        questResId = intent.getExtras().getInt("TreasuerNumber");
-
         vuforiaAppSession = new SampleApplicationSession(this);
 
         vuforiaAppSession
@@ -143,7 +137,7 @@ public class UserDefinedTargets extends FragmentActivity implements
 
         mIsDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith(
                 "droid");
-        trackBuilder();
+       // trackBuilder();
 
     }
 
@@ -160,7 +154,27 @@ public class UserDefinedTargets extends FragmentActivity implements
             finish();
         }
     }
+    long backKeyTime=0;
+    @Override
+    public void onBackPressed() {
+        Toast toast;
 
+        if (System.currentTimeMillis() > backKeyTime + 2000) {
+            backKeyTime = System.currentTimeMillis();
+            toast = Toast.makeText(this, "준비 중입니다. 종료하시겠습니까?", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+        if (System.currentTimeMillis() <= backKeyTime + 2000) {
+            moveTaskToBack(true);
+            finish();
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
+    }
+    @Override
+    public void onClick(View v) {
+        trackBuilder();
+    }
 
 
     // Process Single Tap event to trigger autofocus
@@ -191,14 +205,14 @@ public class UserDefinedTargets extends FragmentActivity implements
                             com.vuforia.CameraDevice.FOCUS_MODE.FOCUS_MODE_TRIGGERAUTO);
                     
                     if (!result)
-                        Log.e("SingleTapUp", "Unable to trigger focus");
+                        SLog.d("Unable to trigger focus");
                 }
             }, 1000L);
             
             return true;
         }
     }
-    
+
     
     // We want to load specific textures from the APK, which we will later use
     // for rendering.
@@ -215,7 +229,7 @@ public class UserDefinedTargets extends FragmentActivity implements
     @Override
     protected void onResume()
     {
-        Log.d(LOGTAG, "onResume");
+        SLog.d("onResume");
         super.onResume();
         // This is needed for some Droid devices to force portrait
         if (mIsDroidDevice)
@@ -229,7 +243,7 @@ public class UserDefinedTargets extends FragmentActivity implements
             vuforiaAppSession.resumeAR();
         } catch (SampleApplicationException e)
         {
-            Log.e(LOGTAG, e.getString());
+            SLog.d(e.getString());
         }
         
         // Resume the GL view:
@@ -246,7 +260,7 @@ public class UserDefinedTargets extends FragmentActivity implements
     @Override
     protected void onPause()
     {
-        Log.d(LOGTAG, "onPause");
+        SLog.d("onPause");
         super.onPause();
         
         if (mGlView != null)
@@ -260,7 +274,7 @@ public class UserDefinedTargets extends FragmentActivity implements
             vuforiaAppSession.pauseAR();
         } catch (SampleApplicationException e)
         {
-            Log.e(LOGTAG, e.getString());
+            SLog.d(e.getString());
         }
     }
     
@@ -269,7 +283,7 @@ public class UserDefinedTargets extends FragmentActivity implements
     @Override
     protected void onDestroy()
     {
-        Log.d(LOGTAG, "onDestroy");
+        SLog.d("onDestroy");
         super.onDestroy();
         
         try
@@ -277,7 +291,7 @@ public class UserDefinedTargets extends FragmentActivity implements
             vuforiaAppSession.stopAR();
         } catch (SampleApplicationException e)
         {
-            Log.e(LOGTAG, e.getString());
+            SLog.d(e.getString());
         }
         
         // Unload texture:
@@ -291,7 +305,7 @@ public class UserDefinedTargets extends FragmentActivity implements
     @Override
     public void onConfigurationChanged(Configuration config)
     {
-        Log.d(LOGTAG, "onConfigurationChanged");
+        SLog.d("onConfigurationChanged");
         super.onConfigurationChanged(config);
         
         vuforiaAppSession.onConfigurationChanged();
@@ -397,6 +411,7 @@ public class UserDefinedTargets extends FragmentActivity implements
         // Gets a reference to the Camera button
         mCameraButton = mUILayout.findViewById(R.id.camera_button);*/
         questDistanceTextView = (TextView)mUILayout.findViewById(R.id.tv_quest_distance);
+        questDistanceTextView.setOnClickListener(this);
         // Gets a reference to the loading dialog container
         loadingDialogHandler.mLoadingDialogContainer = mUILayout
             .findViewById(R.id.loading_layout);
@@ -463,7 +478,7 @@ public class UserDefinedTargets extends FragmentActivity implements
     private void initializeBuildTargetModeViews()
     {
         // Shows the bottom bar
-        mBottomBar.setVisibility(View.VISIBLE);
+      //  trackBuilder();
     }
     
     
@@ -477,7 +492,7 @@ public class UserDefinedTargets extends FragmentActivity implements
     
     boolean startUserDefinedTargets()
     {
-        Log.d(LOGTAG, "startUserDefinedTargets");
+        SLog.d("startUserDefinedTargets");
         
         TrackerManager trackerManager = TrackerManager.getInstance();
         ObjectTracker objectTracker = (ObjectTracker) (trackerManager
@@ -517,7 +532,7 @@ public class UserDefinedTargets extends FragmentActivity implements
                 .getImageTargetBuilder();
             if (targetBuilder != null)
             {
-                Log.e(LOGTAG, "Quality> " + targetBuilder.getFrameQuality());
+                SLog.d("Quality> " + targetBuilder.getFrameQuality());
                 return (targetBuilder.getFrameQuality() != ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_NONE) ? true
                     : false;
             }
@@ -540,14 +555,14 @@ public class UserDefinedTargets extends FragmentActivity implements
             {
                 if (targetBuilder.getFrameQuality() == ImageTargetBuilder.FRAME_QUALITY.FRAME_QUALITY_LOW)
                 {
-                     showErrorDialogInUIThread();
+                    //showErrorDialogInUIThread();
                 }
                 
                 String name;
                 do
                 {
                     name = "UserTarget-" + targetBuilderCounter;
-                    Log.d(LOGTAG, "TRYING " + name);
+                    SLog.d("TRYING " + name);
                     targetBuilderCounter++;
                 } while (!targetBuilder.build(name, 320.0f));
                 
@@ -577,11 +592,11 @@ public class UserDefinedTargets extends FragmentActivity implements
             .getClassType());
         if (tracker == null)
         {
-            Log.d(LOGTAG, "Failed to initialize ObjectTracker.");
+            SLog.d("Failed to initialize ObjectTracker.");
             result = false;
         } else
         {
-            Log.d(LOGTAG, "Successfully initialized ObjectTracker.");
+            SLog.d("Successfully initialized ObjectTracker.");
         }
         
         return result;
@@ -597,8 +612,7 @@ public class UserDefinedTargets extends FragmentActivity implements
             .getTracker(ObjectTracker.getClassType());
         if (objectTracker == null)
         {
-            Log.d(
-                LOGTAG,
+            SLog.d(
                 "Failed to load tracking data set because the ObjectTracker has not been initialized.");
             return false;
         }
@@ -607,16 +621,16 @@ public class UserDefinedTargets extends FragmentActivity implements
         dataSetUserDef = objectTracker.createDataSet();
         if (dataSetUserDef == null)
         {
-            Log.d(LOGTAG, "Failed to create a new tracking data.");
+            SLog.d("Failed to create a new tracking data.");
             return false;
         }
         if (!objectTracker.activateDataSet(dataSetUserDef))
         {
-            Log.d(LOGTAG, "Failed to activate data set.");
+            SLog.d("Failed to activate data set.");
             return false;
         }
-        
-        Log.d(LOGTAG, "Successfully loaded and activated data set.");
+
+        SLog.d("Successfully loaded and activated data set.");
         return true;
     }
     
@@ -664,9 +678,7 @@ public class UserDefinedTargets extends FragmentActivity implements
         if (objectTracker == null)
         {
             result = false;
-            Log.d(
-                LOGTAG,
-                "Failed to destroy the tracking data set because the ObjectTracker has not been initialized.");
+            SLog.d("Failed to destroy the tracking data set because the ObjectTracker has not been initialized.");
         }
         
         if (dataSetUserDef != null)
@@ -674,19 +686,17 @@ public class UserDefinedTargets extends FragmentActivity implements
             if (objectTracker.getActiveDataSet(0) != null
                 && !objectTracker.deactivateDataSet(dataSetUserDef))
             {
-                Log.d(
-                    LOGTAG,
-                    "Failed to destroy the tracking data set because the data set could not be deactivated.");
+                SLog.d("Failed to destroy the tracking data set because the data set could not be deactivated.");
                 result = false;
             }
             
             if (!objectTracker.destroyDataSet(dataSetUserDef))
             {
-                Log.d(LOGTAG, "Failed to destroy the tracking data set.");
+                SLog.d("Failed to destroy the tracking data set.");
                 result = false;
             }
-            
-            Log.d(LOGTAG, "Successfully destroyed the data set.");
+
+            SLog.d("Successfully destroyed the data set.");
             dataSetUserDef = null;
         }
         
@@ -739,21 +749,21 @@ public class UserDefinedTargets extends FragmentActivity implements
                 vuforiaAppSession.startAR(CameraDevice.CAMERA_DIRECTION.CAMERA_DIRECTION_DEFAULT);
             } catch (SampleApplicationException e)
             {
-                Log.e(LOGTAG, e.getString());
+                SLog.d( e.getString());
             }
 
             boolean result = CameraDevice.getInstance().setFocusMode(
                     CameraDevice.FOCUS_MODE.FOCUS_MODE_CONTINUOUSAUTO);
 
             if (!result)
-                Log.e(LOGTAG, "Unable to enable continuous autofocus");
-            setSampleAppMenuAdditionalViews();
+                SLog.d("Unable to enable continuous autofocus");
+           // setSampleAppMenuAdditionalViews();
             setSampleAppMenuSettings();
 
 
         } else
         {
-            Log.e(LOGTAG, exception.getString());
+            SLog.d( exception.getString());
             showInitializationErrorMessage(exception.getString());
         }
     }
@@ -766,8 +776,7 @@ public class UserDefinedTargets extends FragmentActivity implements
 
         if (refFreeFrame.hasNewTrackableSource())
         {
-            Log.d(LOGTAG,
-                    "Attempting to transfer the trackable source to the dataset");
+            SLog.d("Attempting to transfer the trackable source to the dataset");
 
             // Deactivate current dataset
             objectTracker.deactivateDataSet(objectTracker.getActiveDataSet(0));
@@ -849,25 +858,18 @@ public class UserDefinedTargets extends FragmentActivity implements
     final public static int CMD_BACK = -1;
     final public static int CMD_EXTENDED_TRACKING = 1;
     
-    // This method sets the additional views to be moved along with the GLView
+   /* // This method sets the additional views to be moved along with the GLView
     private void setSampleAppMenuAdditionalViews()
     {
         mSettingsAdditionalViews = new ArrayList<View>();
         mSettingsAdditionalViews.add(mBottomBar);
-    }
+    }*/
     
     
     // This method sets the menu's settings
     private void setSampleAppMenuSettings()
     {
-    }
-
-    public String getQuestAsset() {
-        return questAsset;
-    }
-
-    public int getQuestResId() {
-        return questResId;
+        SLog.d("initmenu");
     }
 
 }

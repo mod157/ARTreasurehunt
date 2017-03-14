@@ -10,7 +10,10 @@ import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.nammu.artreasurehunt.module.ListDialog;
+import com.nammu.artreasurehunt.module.RealmDB;
 import com.nammu.artreasurehunt.module.SLog;
+import com.nammu.artreasurehunt.module.SuccessInfo;
 import com.nammu.artreasurehunt.userdefinedtargets.UserDefinedTargets;
 
 import java.util.ArrayList;
@@ -18,6 +21,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.et_startName)
@@ -26,17 +31,29 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.tv_startBtn)
     public void onClick(View view){
         try {
-            if (!et_startName.getText().toString().equals("이지스")){
+            if (et_startName.getText().toString().equals("이지스")){
                 startTreasuerHuntPage();
             }
             if (et_startName.getText().toString().toUpperCase().equals("AEGIS")){
                 startTreasuerHuntPage();
-            }
+            }else
+                Toast.makeText(this,"AEGIS(이지스)를 입력해주세요!", Toast.LENGTH_SHORT).show();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
-
+    @OnClick(R.id.iv_successList)
+    public void listView(View view){
+        Realm realm = RealmDB.RealmInit(this);
+        RealmResults<SuccessInfo> itemResult = realm.where(SuccessInfo.class).findAll();
+        if(itemResult.size() != 0){
+            ArrayList<SuccessInfo> list = new ArrayList<>(itemResult);
+            ListDialog listDialog = new ListDialog(this, list);
+            listDialog.show();
+        }else{
+            Toast.makeText(this,"발견한 보물이 없습니다.",Toast.LENGTH_SHORT).show();
+        }
+    }
     @Override
     protected void onStart() {
         super.onStart();
@@ -79,5 +96,22 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this,"입장 합니다.",Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, TreasuerMapActivity.class);
         startActivity(intent);
+    }
+    long backKeyTime=0;
+    @Override
+    public void onBackPressed() {
+        Toast toast;
+
+        if (System.currentTimeMillis() > backKeyTime + 2000) {
+            backKeyTime = System.currentTimeMillis();
+            toast = Toast.makeText(this, "\'뒤로\' 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+        if (System.currentTimeMillis() <= backKeyTime + 2000) {
+            moveTaskToBack(true);
+            finish();
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
     }
 }

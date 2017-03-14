@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,25 +10,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         class="com.google.android.gms.maps.MapFragment" />
+
     <LinearLayout
         android:id="@+id/bottom_bar"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="visible"
-        android:weightSum="1" >
+        android:weightSum="1">
 
         <ImageView
             android:id="@+id/btn_treasuerScan"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/content_desc_camera_button"
-            android:src="@drawable/camera_button_background"
+            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:layout_margin="10dp"/>
+            android:contentDescription="@string/content_desc_camera_button"
+            android:src="@drawable/luxury_64" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_mylocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/myloaction_32" />
 </RelativeLayout>

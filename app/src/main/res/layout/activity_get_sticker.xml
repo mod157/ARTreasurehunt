@@ -1,27 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_get_sticker"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/material_green"
     tools:context="com.nammu.artreasurehunt.GetStickerActivity">
 
 
-
-    <com.flaviofaria.kenburnsview.KenBurnsView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/kv_get_sticker_sticker" />
+        android:orientation="vertical">
 
-    <TextView
-        android:text="GET!!"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:textSize="100sp"
-        android:textColor="#AFFFFFFF"
-        android:layout_marginTop="40dp"/>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="40dp"
+            android:text="클릭!!"
+            android:textColor="@color/white"
+            android:textSize="40dp" />
+
+        <ImageView
+            android:id="@+id/iv_fail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            app:srcCompat="@drawable/fail" />
+
+        <ImageView
+            android:id="@+id/iv_Success"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            app:srcCompat="@drawable/success" />
+
+    </LinearLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</FrameLayout>

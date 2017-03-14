@@ -169,6 +169,7 @@ public class UserDefinedTargetRenderer implements GLSurfaceView.Renderer, Sample
             //
             //TODO 왔을때 설정화면
             if(modelViewMatrix[14] < TARGET_GET_ZOOM_IN) {
+                SLog.d("Get!!!!");
                 Intent intent = new Intent(mActivity, GetStickerActivity.class);
                 mActivity.startActivity(intent);
                 mActivity.finish();

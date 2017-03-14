@@ -7,7 +7,7 @@ import android.util.Log;
  */
 
 public class SLog {
-    private static boolean debug = true;
+    private static boolean debug = false;
     /** Log Level Error **/
 
     public static final void e(String message) {

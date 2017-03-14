@@ -5,4 +5,14 @@ package com.nammu.artreasurehunt.module;
  */
 
 public class ItemInfo {
+    private int number;
+    private boolean status;
+
+    public void setNumber(int num){number= num;}
+    public int getNumber(){return number;}
+    public void setStatus(boolean status){
+        this.status = status;
+    }
+    public boolean getStatus(){return status;}
+
 }

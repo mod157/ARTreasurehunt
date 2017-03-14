@@ -1,12 +1,15 @@
 
 package com.nammu.artreasurehunt;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
-import com.bumptech.glide.Glide;
-import com.flaviofaria.kenburnsview.KenBurnsView;
+import android.view.View;
+import android.widget.ImageView;
+import com.nammu.artreasurehunt.appInit.MyApplication;
+import com.nammu.artreasurehunt.module.RealmDB;
+import com.nammu.artreasurehunt.module.SLog;
+import com.nammu.artreasurehunt.module.SocketIO;
+import com.nammu.artreasurehunt.module.SuccessInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -14,42 +17,50 @@ import butterknife.OnClick;
 
 public class GetStickerActivity extends AppCompatActivity {
 
-    private static final String LOGTAG = "GetStickerActivity";
 
    // private DatabaseReference appDatabase;
 
-    @BindView(R.id.kv_get_sticker_sticker)KenBurnsView getStickerKenBurnView;
-    /*@BindView(R.id.iv_get_sticker_get)CircleImageView getGetCircleImageView;
-    @OnClick(R.id.iv_get_sticker_get) void getClick() {
-        appDatabase.child("users").child(MyApplication.getMyUid()).addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get user value
-                        User user = dataSnapshot.getValue(User.class);
-                        Sticker sticker = new Sticker(questAsset, questResId);
-                        user.addStickerList(sticker);
-                        user.removeQuest(questLng, questLat);
-                        appDatabase.child("users").child(MyApplication.getMyUid()).setValue(user);
+    @BindView(R.id.iv_fail)
+    ImageView iv_fail;
+    @BindView(R.id.iv_Success)
+    ImageView iv_Success;
 
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+    @OnClick({R.id.iv_Success, R.id.iv_fail})
+    public void onClick(View view){
+        if(view.getId() == R.id.iv_Success){
+            SuccessInfo successInfo = new SuccessInfo();
+            successInfo.setNumber(MyApplication.getItemNumber());
+            successInfo.setRoomID("AEGIS");
+            RealmDB.InsertOrUpdate(this,successInfo);
+        }
         finish();
-    }*/
-    private String questAsset;
+    }
+    @Override
+    public void onBackPressed() {}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_sticker);
+        SLog.d("Sticker Start");
         ButterKnife.bind(this);
-
-       // appDatabase = FirebaseDatabase.getInstance().getReference();
-        Intent intent = getIntent();
-        questAsset = intent.getExtras().getString("questasset");
-        Glide.with(this).load(questAsset).into(getStickerKenBurnView);
-
+        SocketIO socketIO = new SocketIO("220.149.242.46:50300");
+        String[] titles = {"number", "ItemStatus"};
+        String bol;
+        if(MyApplication.getItemStatus()){
+            bol = "1";
+        }else{
+            bol = "0";
+        }
+        String[] message = {MyApplication.getItemNumber()+"", bol};
+        socketIO.sendMessage("noEvent", titles, message);
+        if(MyApplication.getItemStatus()){
+            SLog.d("T Status : " + MyApplication.getItemStatus());
+            iv_Success.setVisibility(View.VISIBLE);
+            iv_fail.setVisibility(View.GONE);
+        }else{
+            SLog.d("F Status : " + MyApplication.getItemStatus());
+            iv_fail.setVisibility(View.VISIBLE);
+            iv_Success.setVisibility(View.GONE);
+        }
     }
 }
